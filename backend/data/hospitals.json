@@ -1,0 +1,333 @@
+{
+  "hospitals": [
+    {
+      "id": 1,
+      "name": "Apollo Hospital Kottayam",
+      "lat": 9.9312,
+      "lon": 76.2673,
+      "type": "private",
+      "address": "Medical College Road, Kottayam, Kerala 686008",
+      "contact": "+91-481-2567890",
+      "specialties": [
+        "cardiology",
+        "neurology",
+        "trauma",
+        "orthopedics",
+        "general_surgery",
+        "pulmonology"
+      ],
+      "beds": {
+        "icu_total": 20,
+        "icu_available": 3,
+        "general_total": 150,
+        "general_available": 25
+      },
+      "specialists": {
+        "cardiologist": {
+          "available": true,
+          "name": "Dr. Anil Sharma",
+          "availability_text": "Available Now"
+        },
+        "neurologist": {
+          "available": false,
+          "name": "Dr. Priya Menon",
+          "availability_text": "Available in 30 min"
+        },
+        "trauma_surgeon": {
+          "available": true,
+          "name": "Dr. Rajesh Verma",
+          "availability_text": "Available Now"
+        },
+        "orthopedic_surgeon": {
+          "available": true,
+          "name": "Dr. Suresh Kumar",
+          "availability_text": "Available Now"
+        }
+      },
+      "facilities": {
+        "cath_lab": true,
+        "ct_scan": true,
+        "mri": true,
+        "ventilators": 15,
+        "blood_bank": true,
+        "dialysis": true
+      },
+      "estimated_costs": {
+        "cardiac_arrest": 45000,
+        "trauma": 30000,
+        "stroke": 50000,
+        "fracture": 20000,
+        "respiratory": 25000
+      },
+      "success_rates": {
+        "cardiac_arrest": 0.92,
+        "trauma": 0.88,
+        "stroke": 0.89,
+        "fracture": 0.95,
+        "respiratory": 0.90
+      }
+    },
+    {
+      "id": 2,
+      "name": "KIMS Hospital Kottayam",
+      "lat": 9.9150,
+      "lon": 76.2590,
+      "type": "private",
+      "address": "KIMS Junction, Kottayam, Kerala 686001",
+      "contact": "+91-481-2523456",
+      "specialties": [
+        "cardiology",
+        "neurology",
+        "trauma",
+        "orthopedics"
+      ],
+      "beds": {
+        "icu_total": 15,
+        "icu_available": 2,
+        "general_total": 100,
+        "general_available": 18
+      },
+      "specialists": {
+        "cardiologist": {
+          "available": false,
+          "name": "Dr. John Mathew",
+          "availability_text": "Available in 20 min"
+        },
+        "neurologist": {
+          "available": true,
+          "name": "Dr. Sarah Thomas",
+          "availability_text": "Available Now"
+        },
+        "trauma_surgeon": {
+          "available": true,
+          "name": "Dr. Vineeth Nair",
+          "availability_text": "Available Now"
+        },
+        "orthopedic_surgeon": {
+          "available": false,
+          "name": "Dr. Ramesh Pillai",
+          "availability_text": "Available in 45 min"
+        }
+      },
+      "facilities": {
+        "cath_lab": true,
+        "ct_scan": true,
+        "mri": false,
+        "ventilators": 10,
+        "blood_bank": true,
+        "dialysis": true
+      },
+      "estimated_costs": {
+        "cardiac_arrest": 40000,
+        "trauma": 28000,
+        "stroke": 45000,
+        "fracture": 18000,
+        "respiratory": 22000
+      },
+      "success_rates": {
+        "cardiac_arrest": 0.89,
+        "trauma": 0.91,
+        "stroke": 0.92,
+        "fracture": 0.93,
+        "respiratory": 0.88
+      }
+    },
+    {
+      "id": 3,
+      "name": "Government Medical College Kottayam",
+      "lat": 9.5915,
+      "lon": 76.5222,
+      "type": "government",
+      "address": "Gandhinagar, Kottayam, Kerala 686008",
+      "contact": "+91-481-2597500",
+      "specialties": [
+        "cardiology",
+        "neurology",
+        "trauma",
+        "orthopedics",
+        "general_surgery",
+        "pulmonology"
+      ],
+      "beds": {
+        "icu_total": 30,
+        "icu_available": 0,
+        "general_total": 200,
+        "general_available": 35
+      },
+      "specialists": {
+        "cardiologist": {
+          "available": true,
+          "name": "Dr. M.K. Krishnan",
+          "availability_text": "Available Now"
+        },
+        "neurologist": {
+          "available": true,
+          "name": "Dr. Lakshmi Nair",
+          "availability_text": "Available Now"
+        },
+        "trauma_surgeon": {
+          "available": true,
+          "name": "Dr. Biju Kumar",
+          "availability_text": "Available Now"
+        },
+        "orthopedic_surgeon": {
+          "available": true,
+          "name": "Dr. Jayasankar",
+          "availability_text": "Available Now"
+        }
+      },
+      "facilities": {
+        "cath_lab": true,
+        "ct_scan": true,
+        "mri": true,
+        "ventilators": 25,
+        "blood_bank": true,
+        "dialysis": true
+      },
+      "estimated_costs": {
+        "cardiac_arrest": 15000,
+        "trauma": 10000,
+        "stroke": 18000,
+        "fracture": 8000,
+        "respiratory": 12000
+      },
+      "success_rates": {
+        "cardiac_arrest": 0.85,
+        "trauma": 0.86,
+        "stroke": 0.84,
+        "fracture": 0.91,
+        "respiratory": 0.87
+      }
+    },
+    {
+      "id": 4,
+      "name": "City General Hospital",
+      "lat": 9.9450,
+      "lon": 76.2720,
+      "type": "private",
+      "address": "MC Road, Kottayam, Kerala 686001",
+      "contact": "+91-481-2567123",
+      "specialties": [
+        "general_surgery",
+        "orthopedics",
+        "trauma"
+      ],
+      "beds": {
+        "icu_total": 8,
+        "icu_available": 5,
+        "general_total": 60,
+        "general_available": 20
+      },
+      "specialists": {
+        "cardiologist": {
+          "available": false,
+          "name": null,
+          "availability_text": "Not Available"
+        },
+        "neurologist": {
+          "available": false,
+          "name": null,
+          "availability_text": "Not Available"
+        },
+        "trauma_surgeon": {
+          "available": true,
+          "name": "Dr. Anoop George",
+          "availability_text": "Available Now"
+        },
+        "orthopedic_surgeon": {
+          "available": true,
+          "name": "Dr. Manoj Varghese",
+          "availability_text": "Available Now"
+        }
+      },
+      "facilities": {
+        "cath_lab": false,
+        "ct_scan": true,
+        "mri": false,
+        "ventilators": 4,
+        "blood_bank": false,
+        "dialysis": false
+      },
+      "estimated_costs": {
+        "cardiac_arrest": 25000,
+        "trauma": 15000,
+        "stroke": 30000,
+        "fracture": 12000,
+        "respiratory": 18000
+      },
+      "success_rates": {
+        "cardiac_arrest": 0.78,
+        "trauma": 0.85,
+        "stroke": 0.75,
+        "fracture": 0.90,
+        "respiratory": 0.82
+      }
+    },
+    {
+      "id": 5,
+      "name": "Believers Church Medical College",
+      "lat": 9.3852,
+      "lon": 76.5747,
+      "type": "private",
+      "address": "Thiruvalla, Pathanamthitta, Kerala 689103",
+      "contact": "+91-469-2740500",
+      "specialties": [
+        "cardiology",
+        "neurology",
+        "trauma",
+        "orthopedics",
+        "general_surgery"
+      ],
+      "beds": {
+        "icu_total": 18,
+        "icu_available": 4,
+        "general_total": 120,
+        "general_available": 22
+      },
+      "specialists": {
+        "cardiologist": {
+          "available": true,
+          "name": "Dr. Thomas Abraham",
+          "availability_text": "Available Now"
+        },
+        "neurologist": {
+          "available": true,
+          "name": "Dr. Elizabeth John",
+          "availability_text": "Available Now"
+        },
+        "trauma_surgeon": {
+          "available": false,
+          "name": "Dr. Samuel Varghese",
+          "availability_text": "Available in 1 hour"
+        },
+        "orthopedic_surgeon": {
+          "available": true,
+          "name": "Dr. Raju Philip",
+          "availability_text": "Available Now"
+        }
+      },
+      "facilities": {
+        "cath_lab": true,
+        "ct_scan": true,
+        "mri": true,
+        "ventilators": 12,
+        "blood_bank": true,
+        "dialysis": true
+      },
+      "estimated_costs": {
+        "cardiac_arrest": 42000,
+        "trauma": 28000,
+        "stroke": 48000,
+        "fracture": 19000,
+        "respiratory": 24000
+      },
+      "success_rates": {
+        "cardiac_arrest": 0.90,
+        "trauma": 0.87,
+        "stroke": 0.91,
+        "fracture": 0.94,
+        "respiratory": 0.89
+      }
+    }
+  ]
+}

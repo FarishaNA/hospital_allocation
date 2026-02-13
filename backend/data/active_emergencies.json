@@ -1,0 +1,90 @@
+{
+  "emergencies": [
+    {
+      "id": "EMG-20260213194748",
+      "hospital_id": 1,
+      "hospital_name": "Apollo Hospital Kottayam",
+      "patient": {
+        "condition": "cardiac_arrest",
+        "severity": "moderate",
+        "vitals": {
+          "bp": "",
+          "hr": "",
+          "spo2": ""
+        }
+      },
+      "start_time": "2026-02-13T14:17:48.418237",
+      "status": "en_route",
+      "route": [
+        {
+          "lat": 9.94,
+          "lon": 76.27,
+          "timestamp": 0,
+          "location": "Pickup Point"
+        },
+        {
+          "lat": 9.93912,
+          "lon": 76.26973,
+          "timestamp": 7,
+          "location": "Pickup Point"
+        },
+        {
+          "lat": 9.93824,
+          "lon": 76.26946,
+          "timestamp": 14,
+          "location": "Main Street"
+        },
+        {
+          "lat": 9.93736,
+          "lon": 76.26919,
+          "timestamp": 21,
+          "location": "Main Street"
+        },
+        {
+          "lat": 9.93648,
+          "lon": 76.26892,
+          "timestamp": 29,
+          "location": "City Center Junction"
+        },
+        {
+          "lat": 9.9356,
+          "lon": 76.26865,
+          "timestamp": 36,
+          "location": "Bypass Junction"
+        },
+        {
+          "lat": 9.93472,
+          "lon": 76.26838,
+          "timestamp": 43,
+          "location": "Bypass Junction"
+        },
+        {
+          "lat": 9.93384,
+          "lon": 76.26811,
+          "timestamp": 51,
+          "location": "Highway Exit"
+        },
+        {
+          "lat": 9.93296,
+          "lon": 76.26784,
+          "timestamp": 58,
+          "location": "Highway Exit"
+        },
+        {
+          "lat": 9.93208,
+          "lon": 76.26757,
+          "timestamp": 65,
+          "location": "Hospital Road"
+        },
+        {
+          "lat": 9.9312,
+          "lon": 76.2673,
+          "timestamp": 73,
+          "location": "Hospital"
+        }
+      ],
+      "total_distance_km": 1.02,
+      "total_time_min": 1.2240000000000002
+    }
+  ]
+}

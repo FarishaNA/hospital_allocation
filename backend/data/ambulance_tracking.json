@@ -1,0 +1,15 @@
+{
+  "ambulances": [
+    {
+      "emergency_id": "EMG-20260213194748",
+      "current_position": {
+        "lat": 9.94,
+        "lon": 76.27
+      },
+      "speed_kmh": 0,
+      "heading": 0,
+      "status": "en_route",
+      "timestamp": "2026-02-13T14:17:48.419756"
+    }
+  ]
+}
