@@ -1,8 +1,13 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+from dotenv import load_dotenv
 import json
 import os
 from routes.hospitals import hospitals_bp
+
+# Load environment variables from .env
+load_dotenv()
+
 from routes.emergency import emergency_bp
 from routes.tracking import tracking_bp
 

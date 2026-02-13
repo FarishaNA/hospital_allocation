@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
-import { Brain, CheckCircle2, Server, Activity, Map } from 'lucide-react';
+import { Server, Activity, Database, CheckCircle2, Lock, Share2 } from 'lucide-react';
 
 const STEPS = [
-    { icon: Map, text: "Scanning 5 hospitals within 15km radius..." },
-    { icon: Activity, text: "Checking specialist availability (Cardiologist)..." },
-    { icon: Server, text: "Queries real-time ICU Bed status..." },
-    { icon: Brain, text: "Analyzes historical success rates & traffic data..." },
+    { icon: Activity, text: "Acquiring real-time telemetry..." },
+    { icon: Database, text: "Querying National Hospital Registry..." },
+    { icon: Server, text: "Analyzing traffic patterns (Google Routes v2)..." },
+    { icon: Share2, text: "Establishing secure handshake with providers..." },
 ];
 
 export default function AIProcessing({ onComplete }) {
@@ -16,44 +16,37 @@ export default function AIProcessing({ onComplete }) {
         if (currentStep < STEPS.length) {
             const timer = setTimeout(() => {
                 setCurrentStep(prev => prev + 1);
-            }, 800); // 800ms per step
+            }, 1200);
             return () => clearTimeout(timer);
         } else {
             const timer = setTimeout(() => {
                 onComplete();
-            }, 1000);
+            }, 800);
             return () => clearTimeout(timer);
         }
     }, [currentStep, onComplete]);
 
     return (
-        <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
 
-            {/* Background Pulse Effect */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                <motion.div
-                    animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0, 0.3] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="w-[500px] h-[500px] bg-blue-500 rounded-full blur-3xl"
-                />
-            </div>
+            <div className="lg:w-1/2 w-full max-w-2xl bg-white p-12 rounded-2xl shadow-xl border border-slate-200 text-center">
 
-            <div className="w-full max-w-2xl text-center z-10">
+                {/* Medical Loader */}
+                <div className="relative w-24 h-24 mx-auto mb-8">
+                    <svg className="animate-spin w-full h-full text-blue-200" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <Activity className="text-blue-600" size={32} />
+                    </div>
+                </div>
 
-                {/* Main Icon */}
-                <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
-                    className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-500/20"
-                >
-                    <Brain size={48} className="text-white" />
-                </motion.div>
-
-                <h2 className="text-3xl font-bold text-white mb-2">AI ANALYZING HOSPITALS...</h2>
-                <p className="text-gray-400 mb-12">Finding the optimal match for critical patient</p>
+                <h2 className="text-2xl font-bold text-slate-800 mb-2">Processing Incident Data</h2>
+                <p className="text-slate-500 mb-10 text-sm font-medium uppercase tracking-widest">Secure Medical Network</p>
 
                 {/* Steps List */}
-                <div className="space-y-6 text-left max-w-lg mx-auto bg-gray-800/50 p-6 rounded-2xl border border-gray-700/50 backdrop-blur-sm">
+                <div className="space-y-4 text-left border-t border-slate-100 pt-8">
                     {STEPS.map((step, index) => {
                         const isActive = index === currentStep;
                         const isCompleted = index < currentStep;
@@ -62,44 +55,35 @@ export default function AIProcessing({ onComplete }) {
                         return (
                             <motion.div
                                 key={index}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: isCompleted || isActive ? 1 : 0.3, x: 0 }}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: isCompleted || isActive ? 1 : 0.4, y: 0 }}
                                 className="flex items-center gap-4"
                             >
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-300
-                  ${isCompleted ? 'bg-green-500/20 text-green-400' : isActive ? 'bg-blue-500/20 text-blue-400 animate-pulse' : 'bg-gray-700 text-gray-500'}
+                                <div className={`w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300
+                  ${isCompleted ? 'bg-emerald-100 text-emerald-600' : isActive ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-300'}
                 `}>
-                                    {isCompleted ? <CheckCircle2 size={18} /> : <Icon size={18} />}
+                                    {isCompleted ? <CheckCircle2 size={14} /> : <div className={`w-2 h-2 rounded-full ${isActive ? 'bg-blue-600 animate-pulse' : 'bg-slate-300'}`} />}
                                 </div>
 
                                 <div className="flex-1">
-                                    <p className={`font-mono text-sm md:text-base transition-colors duration-300
-                    ${isCompleted ? 'text-gray-300' : isActive ? 'text-white font-semibold' : 'text-gray-600'}
+                                    <p className={`text-sm font-medium transition-colors duration-300
+                    ${isCompleted ? 'text-slate-500' : isActive ? 'text-slate-800' : 'text-slate-400'}
                   `}>
                                         {step.text}
                                     </p>
-                                    {isActive && (
-                                        <motion.div
-                                            layoutId="progress-bar"
-                                            className="h-1 bg-blue-500 mt-2 rounded-full origin-left"
-                                            initial={{ scaleX: 0 }}
-                                            animate={{ scaleX: 1 }}
-                                            transition={{ duration: 0.8 }}
-                                        />
-                                    )}
                                 </div>
+
+                                {isActive && <span className="text-xs font-bold text-blue-600 animate-pulse">PROCESSING</span>}
+                                {isCompleted && <span className="text-xs font-bold text-emerald-600">DONE</span>}
                             </motion.div>
                         );
                     })}
                 </div>
 
-                <motion.p
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: currentStep === STEPS.length ? 1 : 0 }}
-                    className="text-green-400 font-bold mt-8 tracking-widest uppercase text-sm"
-                >
-                    OPTIMAL MATCH IDENTIFIED
-                </motion.p>
+                <div className="mt-12 flex justify-center items-center gap-2 text-xs text-slate-400">
+                    <Lock size={12} />
+                    <span>HIPAA Compliant • End-to-End Encrypted</span>
+                </div>
 
             </div>
         </div>

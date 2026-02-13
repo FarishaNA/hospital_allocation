@@ -3,7 +3,8 @@ import { useEmergency } from '../context/EmergencyContext';
 import { getActiveEmergency, getTracking } from '../services/api';
 import HospitalMap from '../components/hospital/HospitalMap';
 import IncomingAlert from '../components/hospital/IncomingAlert';
-// Need to fetch hospital location from somewhere, hardcoding for demo or fetch from API
+import { Activity, ShieldCheck } from 'lucide-react';
+
 const HOSPITAL_LOCATION = { lat: 9.9312, lon: 76.2673 }; // Apollo
 
 export default function HospitalDashboard() {
@@ -21,9 +22,15 @@ export default function HospitalDashboard() {
                     setEmergency(active);
 
                     // Get live tracking for this emergency
-                    const tracking = await getTracking(active.id);
-                    setAmbulancePos({ lat: tracking.lat, lon: tracking.lon });
-                    setEta(Math.ceil(tracking.eta_seconds / 60));
+                    try {
+                        const tracking = await getTracking(active.id);
+                        if (tracking) {
+                            setAmbulancePos({ lat: tracking.lat, lon: tracking.lon });
+                            setEta(Math.ceil(tracking.eta_seconds / 60));
+                        }
+                    } catch (err) {
+                        console.warn("Tracking fetch failed", err);
+                    }
                 } else {
                     setEmergency(null);
                     setAmbulancePos(null);
@@ -31,15 +38,15 @@ export default function HospitalDashboard() {
             } catch (e) {
                 console.error("Dashboard poll error", e);
             }
-        }, 1000);
+        }, 2000); // Poll every 2s
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <div className="h-screen w-screen flex bg-gray-100 overflow-hidden">
+        <div className="h-screen w-screen flex bg-slate-50 overflow-hidden font-sans">
 
             {/* Sidebar - Alert Panel */}
-            <div className="w-96 md:w-[450px] h-full shadow-2xl z-20">
+            <div className="w-96 md:w-[450px] h-full shadow-2xl z-20 bg-white border-r border-slate-200">
                 <IncomingAlert emergency={emergency} eta={eta} />
             </div>
 
@@ -48,26 +55,23 @@ export default function HospitalDashboard() {
                 {/* Top Bar Overlay */}
                 <div className="absolute top-0 left-0 right-0 bg-white/90 backdrop-blur-md p-4 shadow-sm z-[400] flex justify-between items-center px-8 border-b border-gray-200">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                            H
+                        <div className="bg-blue-600 p-2 rounded-lg text-white">
+                            <ShieldCheck size={24} />
                         </div>
                         <div>
-                            <h1 className="font-bold text-gray-800 text-lg">Apollo Hospital Command Center</h1>
-                            <div className="text-xs text-green-600 font-bold flex items-center gap-1">
-                                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /> SYSTEM ONLINE
+                            <h1 className="font-bold text-slate-800 text-lg leading-tight">Apollo Hospital Command Center</h1>
+                            <div className="text-[10px] text-emerald-600 font-bold flex items-center gap-1 uppercase tracking-wider">
+                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /> System Online • Ready
                             </div>
                         </div>
                     </div>
-                    <div className="text-sm font-medium text-gray-500">
-                        {new Date().toLocaleDateString()}
+                    <div className="text-sm font-medium text-slate-500 font-mono bg-slate-100 px-3 py-1 rounded">
+                        {new Date().toLocaleTimeString()}
                     </div>
                 </div>
 
-                <HospitalMap ambulancePos={ambulancePos} hospitalPos={HOSPITALS_LOCATION} />
+                <HospitalMap ambulancePos={ambulancePos} hospitalPos={HOSPITAL_LOCATION} />
             </div>
         </div>
     );
 }
-
-// Simple fix for undefined var in quick code
-const HOSPITALS_LOCATION = { lat: 9.9312, lon: 76.2673 };

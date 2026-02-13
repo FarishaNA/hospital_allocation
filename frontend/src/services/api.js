@@ -32,4 +32,9 @@ export const getTracking = async (emergencyId) => {
     return response.data;
 };
 
+export const aiTriage = async (text) => {
+    const response = await api.post('/triage', { text });
+    return response.data;
+};
+
 export default api;
