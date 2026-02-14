@@ -1,76 +1,212 @@
 import { useState, useEffect } from 'react';
-import { useEmergency } from '../context/EmergencyContext';
 import { getActiveEmergency, getTracking } from '../services/api';
-import HospitalMap from '../components/hospital/HospitalMap';
-import IncomingAlert from '../components/hospital/IncomingAlert';
-import { Activity, ShieldCheck } from 'lucide-react';
+import { Activity, Bed, Clock, AlertCircle } from 'lucide-react';
 
-const HOSPITAL_LOCATION = { lat: 9.9312, lon: 76.2673 }; // Apollo
+// Hospital data (same as ambulance side for consistency)
+const HOSPITAL_DATA = {
+    id: 1,
+    name: "Apollo Hospital Kottayam",
+    beds: {
+        icu_total: 20,
+        icu_available: 3, // Will decrease when emergency arrives
+        general_total: 150,
+        general_available: 25
+    }
+};
 
 export default function HospitalDashboard() {
     const [emergency, setEmergency] = useState(null);
-    const [ambulancePos, setAmbulancePos] = useState(null);
     const [eta, setEta] = useState(null);
+    const [beds, setBeds] = useState(HOSPITAL_DATA.beds);
 
     useEffect(() => {
-        // Poll for active emergencies assigned to this hospital
-        const interval = setInterval(async () => {
+        const pollEmergencies = async () => {
             try {
                 const active = await getActiveEmergency();
-                // In real app, check if active.hospital_id === MY_ID
+                
                 if (active) {
                     setEmergency(active);
-
-                    // Get live tracking for this emergency
+                    
+                    // Get ETA
                     try {
                         const tracking = await getTracking(active.id);
                         if (tracking) {
-                            setAmbulancePos({ lat: tracking.lat, lon: tracking.lon });
                             setEta(Math.ceil(tracking.eta_seconds / 60));
                         }
                     } catch (err) {
-                        console.warn("Tracking fetch failed", err);
+                        // Calculate ETA from start time
+                        const elapsed = (Date.now() - new Date(active.start_time).getTime()) / 1000;
+                        const remaining = Math.max(0, (active.total_time_min * 60) - elapsed);
+                        setEta(Math.ceil(remaining / 60));
+                    }
+
+                    // Update bed count (simulate bed being reserved)
+                    if (active.patient?.severity === 'critical') {
+                        setBeds(prev => ({
+                            ...prev,
+                            icu_available: Math.max(0, HOSPITAL_DATA.beds.icu_available - 1)
+                        }));
                     }
                 } else {
                     setEmergency(null);
-                    setAmbulancePos(null);
+                    setEta(null);
+                    setBeds(HOSPITAL_DATA.beds); // Reset beds
                 }
             } catch (e) {
-                console.error("Dashboard poll error", e);
+                console.error('Dashboard error:', e);
             }
-        }, 2000); // Poll every 2s
+        };
+
+        pollEmergencies();
+        const interval = setInterval(pollEmergencies, 2000);
+        
         return () => clearInterval(interval);
     }, []);
 
     return (
-        <div className="h-screen w-screen flex bg-slate-50 overflow-hidden font-sans">
-
-            {/* Sidebar - Alert Panel */}
-            <div className="w-96 md:w-[450px] h-full shadow-2xl z-20 bg-white border-r border-slate-200">
-                <IncomingAlert emergency={emergency} eta={eta} />
+        <div className="h-screen flex flex-col bg-gray-50">
+            
+            {/* Header */}
+            <div className="bg-white border-b px-6 py-4 shadow-sm">
+                <div className="flex justify-between items-center">
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900">{HOSPITAL_DATA.name}</h1>
+                        <div className="text-sm text-gray-500">Emergency Department Dashboard</div>
+                    </div>
+                    <div className="text-right">
+                        <div className="text-xs text-gray-500 font-semibold">Current Time</div>
+                        <div className="text-lg font-mono font-bold text-gray-900">
+                            {new Date().toLocaleTimeString()}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* Main Map Area */}
-            <div className="flex-1 relative z-10">
-                {/* Top Bar Overlay */}
-                <div className="absolute top-0 left-0 right-0 bg-white/90 backdrop-blur-md p-4 shadow-sm z-[400] flex justify-between items-center px-8 border-b border-gray-200">
-                    <div className="flex items-center gap-3">
-                        <div className="bg-blue-600 p-2 rounded-lg text-white">
-                            <ShieldCheck size={24} />
-                        </div>
-                        <div>
-                            <h1 className="font-bold text-slate-800 text-lg leading-tight">Apollo Hospital Command Center</h1>
-                            <div className="text-[10px] text-emerald-600 font-bold flex items-center gap-1 uppercase tracking-wider">
-                                <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" /> System Online • Ready
+            {/* Main Content */}
+            <div className="flex-1 p-6 overflow-y-auto">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                    {/* Bed Availability */}
+                    <div className="bg-white rounded-xl shadow-lg border p-6">
+                        <h2 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                            <Bed size={20} className="text-blue-600" />
+                            Bed Availability
+                        </h2>
+                        
+                        <div className="space-y-4">
+                            <div className={`p-4 rounded-lg border-2 ${
+                                beds.icu_available < HOSPITAL_DATA.beds.icu_available 
+                                    ? 'bg-amber-50 border-amber-300' 
+                                    : 'bg-emerald-50 border-emerald-300'
+                            }`}>
+                                <div className="text-xs font-semibold text-gray-600 mb-1">ICU BEDS</div>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-4xl font-bold text-gray-900">{beds.icu_available}</span>
+                                    <span className="text-lg text-gray-500">/ {beds.icu_total}</span>
+                                </div>
+                                {beds.icu_available < HOSPITAL_DATA.beds.icu_available && (
+                                    <div className="mt-2 text-xs text-amber-700 font-semibold">
+                                        ⚠️ 1 bed reserved for incoming patient
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <div className="text-xs font-semibold text-gray-600 mb-1">GENERAL BEDS</div>
+                                <div className="flex items-baseline gap-2">
+                                    <span className="text-3xl font-bold text-gray-900">{beds.general_available}</span>
+                                    <span className="text-lg text-gray-500">/ {beds.general_total}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="text-sm font-medium text-slate-500 font-mono bg-slate-100 px-3 py-1 rounded">
-                        {new Date().toLocaleTimeString()}
-                    </div>
-                </div>
 
-                <HospitalMap ambulancePos={ambulancePos} hospitalPos={HOSPITAL_LOCATION} />
+                    {/* Incoming Emergency */}
+                    <div className="lg:col-span-2">
+                        {emergency ? (
+                            <div className="bg-red-50 rounded-xl shadow-lg border-2 border-red-300 p-6">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h2 className="text-lg font-bold text-red-900 flex items-center gap-2">
+                                        <AlertCircle size={20} className="animate-pulse" />
+                                        INCOMING EMERGENCY
+                                    </h2>
+                                    <div className="bg-red-600 text-white px-4 py-2 rounded-lg">
+                                        <div className="text-xs font-semibold">ETA</div>
+                                        <div className="text-2xl font-mono font-bold">
+                                            {eta || '--'} min
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-6">
+                                    {/* Patient Info */}
+                                    <div>
+                                        <div className="text-sm font-semibold text-red-800 mb-3">Patient Condition</div>
+                                        <div className="space-y-2">
+                                            <div>
+                                                <span className="text-xs text-gray-600">Condition:</span>
+                                                <div className="text-lg font-bold text-gray-900 capitalize">
+                                                    {emergency.patient?.condition?.replace('_', ' ')}
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span className="text-xs text-gray-600">Severity:</span>
+                                                <div className="text-lg font-bold text-red-700 uppercase">
+                                                    {emergency.patient?.severity}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Vitals */}
+                                    {emergency.patient?.vitals && (
+                                        <div>
+                                            <div className="text-sm font-semibold text-red-800 mb-3">Live Vitals</div>
+                                            <div className="grid grid-cols-3 gap-2">
+                                                <div className="bg-white p-2 rounded">
+                                                    <div className="text-xs text-gray-500">BP</div>
+                                                    <div className="font-mono font-bold text-sm">{emergency.patient.vitals.bp}</div>
+                                                </div>
+                                                <div className="bg-white p-2 rounded">
+                                                    <div className="text-xs text-gray-500">HR</div>
+                                                    <div className="font-mono font-bold text-sm">{emergency.patient.vitals.hr}</div>
+                                                </div>
+                                                <div className="bg-white p-2 rounded">
+                                                    <div className="text-xs text-gray-500">SpO2</div>
+                                                    <div className="font-mono font-bold text-sm">{emergency.patient.vitals.spo2}%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Preparation Checklist */}
+                                <div className="mt-6 pt-6 border-t border-red-200">
+                                    <div className="text-sm font-semibold text-red-800 mb-3">Preparation Status</div>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {['ICU Bed Reserved', 'Trauma Team Notified', 'Equipment Ready', 'ER Cleared'].map((item, i) => (
+                                            <div key={i} className="flex items-center gap-2 text-sm">
+                                                <div className="w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center text-white text-xs">
+                                                    ✓
+                                                </div>
+                                                <span className="text-gray-700">{item}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="bg-white rounded-xl shadow-lg border p-12 text-center">
+                                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Activity size={32} className="text-gray-400" />
+                                </div>
+                                <h3 className="text-xl font-bold text-gray-400 mb-2">No Active Emergencies</h3>
+                                <p className="text-sm text-gray-500">Monitoring for incoming ambulances...</p>
+                            </div>
+                        )}
+                    </div>
+
+                </div>
             </div>
         </div>
     );

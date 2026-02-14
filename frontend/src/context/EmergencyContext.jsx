@@ -7,7 +7,6 @@ export const EmergencyProvider = ({ children }) => {
     const [selectedHospital, setSelectedHospital] = useState(null);
     const [ambulanceLocation, setAmbulanceLocation] = useState(null);
 
-    // Demo state
     const resetEmergency = () => {
         setActiveEmergency(null);
         setSelectedHospital(null);
@@ -29,4 +28,10 @@ export const EmergencyProvider = ({ children }) => {
     );
 };
 
-export const useEmergency = () => useContext(EmergencyContext);
+export const useEmergency = () => {
+    const context = useContext(EmergencyContext);
+    if (!context) {
+        throw new Error('useEmergency must be used within EmergencyProvider');
+    }
+    return context;
+};

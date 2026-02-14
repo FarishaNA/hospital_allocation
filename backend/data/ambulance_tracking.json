@@ -1,16 +1,16 @@
 {
   "ambulances": [
     {
-      "emergency_id": "EMG-20260214003157",
+      "emergency_id": "EMG-20260214071713",
       "current_position": {
-        "name": "Ettumanoor (Highway)",
+        "name": "Ettumanoor",
         "lat": 9.6667,
         "lon": 76.5667
       },
       "speed_kmh": 0,
       "heading": 0,
       "status": "en_route",
-      "timestamp": "2026-02-13T19:01:57.657521"
+      "timestamp": "2026-02-14T01:47:13.429448"
     }
   ]
 }

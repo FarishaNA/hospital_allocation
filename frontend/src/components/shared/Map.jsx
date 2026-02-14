@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Fix generic marker icon issue in Leaflet + Vite
+// Fix Leaflet default icon issue
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -16,7 +16,7 @@ L.Icon.Default.mergeOptions({
 
 export default function Map({ center = [9.9312, 76.2673], zoom = 13, children }) {
     return (
-        <div className="w-full h-full rounded-xl overflow-hidden shadow-inner bg-gray-100 relative z-0">
+        <div className="w-full h-full rounded-lg overflow-hidden bg-gray-100">
             <MapContainer
                 center={center}
                 zoom={zoom}
@@ -24,7 +24,7 @@ export default function Map({ center = [9.9312, 76.2673], zoom = 13, children })
                 zoomControl={false}
             >
                 <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 <ZoomControl position="bottomright" />

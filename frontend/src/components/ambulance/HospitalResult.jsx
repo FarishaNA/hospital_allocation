@@ -1,115 +1,118 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Navigation, Clock, Activity, AlertTriangle, CheckCircle, MapPin, Phone, ArrowRight, X } from 'lucide-react';
+import { Navigation, Clock, CheckCircle, MapPin, ArrowRight, X } from 'lucide-react';
 
 export default function HospitalResult({ result, onConfirm, onCancel }) {
     const { selected, alternatives } = result;
     const [loading, setLoading] = useState(false);
 
     const handleConfirm = () => {
-        console.log("🟢 handleConfirm function called");
-        console.log("Setting loading to true");
+        console.log('🔵 HospitalResult: handleConfirm called');
+        console.log('🔵 Selected hospital data:', selected);
+        console.log('🔵 onConfirm function type:', typeof onConfirm);
+        
+        if (typeof onConfirm !== 'function') {
+            console.error('❌ onConfirm is not a function!', onConfirm);
+            alert('Error: onConfirm callback is not a function');
+            return;
+        }
+        
         setLoading(true);
-        console.log("Calling onConfirm with:", selected);
-        console.log("onConfirm type:", typeof onConfirm);
-        onConfirm(selected);
-        console.log("onConfirm called successfully");
-        // Loading state remains until parent unmounts view
+        
+        // Add a small delay to show loading state
+        setTimeout(() => {
+            console.log('🔵 Calling onConfirm...');
+            onConfirm(selected);
+        }, 100);
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 p-4 md:p-8 flex items-center justify-center font-sans text-slate-900">
-            <div className="w-full max-w-6xl space-y-6">
+        <div className="min-h-screen bg-gray-50 p-6 flex items-center justify-center">
+            <div className="w-full max-w-5xl space-y-4">
 
-                {/* Verification Banner */}
-                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-md flex items-center justify-center gap-2 text-sm font-medium shadow-sm">
-                    <CheckCircle size={18} className="text-emerald-600" />
-                    AI Analysis Complete: Optimal Facility Identified based on Traffic & Specialty Availability
+                {/* Success Banner */}
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg flex items-center justify-center gap-2 text-sm font-medium">
+                    <CheckCircle size={18} />
+                    Optimal hospital identified based on real-time data
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    {/* LEFT: Main Selection Card */}
+                    {/* Main Selection */}
                     <div className="lg:col-span-2">
-                        <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="bg-white rounded-xl border-2 border-blue-600 shadow-xl overflow-hidden h-full flex flex-col"
-                        >
-                            <div className="bg-blue-600 text-white p-6 border-b border-blue-700">
+                        <div className="bg-white rounded-xl border-2 border-blue-500 shadow-lg overflow-hidden">
+                            
+                            {/* Header */}
+                            <div className="bg-blue-600 text-white p-6">
                                 <div className="flex justify-between items-start">
                                     <div>
-                                        <h2 className="text-3xl font-bold leading-tight mb-2">
-                                            {selected.hospital.name}
-                                        </h2>
-                                        <div className="flex items-center gap-4 opacity-90 text-sm font-medium">
-                                            <span className="flex items-center gap-1"><MapPin size={16} /> {selected.hospital.address}</span>
-                                            <span className="bg-white/20 px-2 py-0.5 rounded text-xs uppercase tracking-wider">Primary Choice</span>
+                                        <h2 className="text-2xl font-bold mb-2">{selected.hospital.name}</h2>
+                                        <div className="flex items-center gap-2 text-sm opacity-90">
+                                            <MapPin size={14} />
+                                            {selected.hospital.address}
                                         </div>
                                     </div>
-                                    <div className="flex flex-col items-end">
+                                    <div className="text-right">
                                         <span className="text-3xl font-bold">{Math.round(selected.score * 100)}%</span>
-                                        <span className="text-xs opacity-75 uppercase">Match Score</span>
+                                        <div className="text-xs opacity-75">MATCH</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="p-8 flex-1 space-y-8">
-
-                                {/* Key Metrics */}
-                                <div className="flex items-center gap-8 border-b border-slate-100 pb-8">
+                            {/* Metrics */}
+                            <div className="p-6 space-y-6">
+                                <div className="flex items-center gap-8 pb-6 border-b border-gray-100">
                                     <div className="flex-1">
-                                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Estimated Travel Time</div>
+                                        <div className="text-xs font-semibold text-gray-400 uppercase mb-1">Travel Time</div>
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-4xl font-black text-slate-800">{selected.estimated_time_min}</span>
-                                            <span className="text-slate-500 font-medium">min</span>
+                                            <span className="text-4xl font-bold text-gray-900">{selected.estimated_time_min}</span>
+                                            <span className="text-gray-500">min</span>
                                         </div>
-                                        <div className="text-sm text-slate-500 mt-1 flex items-center gap-1">
-                                            <Navigation size={14} className="text-blue-600" /> {selected.distance_km} km via fastest route
+                                        <div className="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                                            <Navigation size={14} className="text-blue-600" />
+                                            {selected.distance_km} km
                                         </div>
                                     </div>
-                                    <div className="w-px h-16 bg-slate-200"></div>
+                                    
+                                    <div className="w-px h-16 bg-gray-200"></div>
+                                    
                                     <div className="flex-1">
-                                        <div className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Specialist Status</div>
+                                        <div className="text-xs font-semibold text-gray-400 uppercase mb-1">Availability</div>
                                         <div className="flex items-center gap-2">
                                             <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full text-sm font-bold flex items-center gap-2">
                                                 <span className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                                                Available Now
+                                                Ready Now
                                             </div>
                                         </div>
-                                        <div className="text-sm text-slate-500 mt-2">
-                                            ICU Beds: <span className="font-bold text-slate-700">{selected.hospital.beds?.icu_available || 2} Available</span>
+                                        <div className="text-sm text-gray-500 mt-2">
+                                            ICU Beds: <span className="font-bold">{selected.hospital.beds?.icu_available || 'N/A'}</span>
                                         </div>
                                     </div>
                                 </div>
 
-                                {/* Reasoning */}
+                                {/* AI Reasoning */}
                                 <div>
-                                    <h3 className="text-sm font-bold text-slate-900 mb-3">System Recommendation</h3>
-                                    <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-                                        <ul className="space-y-3">
-                                            {selected.selection_reason ? selected.selection_reason.split(', ').map((reason, i) => (
-                                                <li key={i} className="flex items-start gap-3 text-slate-700">
-                                                    <CheckCircle size={18} className="text-blue-600 mt-0.5 shrink-0" />
-                                                    <span>{reason}</span>
-                                                </li>
-                                            )) : (
-                                                <li className="flex items-start gap-3 text-slate-700">
-                                                    <CheckCircle size={18} className="text-blue-600 mt-0.5 shrink-0" />
-                                                    <span>Optimal balance of travel time and clinical capabilities.</span>
-                                                </li>
-                                            )}
-                                        </ul>
+                                    <h3 className="text-sm font-semibold text-gray-900 mb-3">Selection Reasoning</h3>
+                                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                                        <p className="text-gray-700 leading-relaxed">
+                                            {selected.selection_reason || 'Optimal match based on distance, facilities, and availability.'}
+                                        </p>
                                     </div>
                                 </div>
-
                             </div>
 
-                            <div className="p-6 bg-slate-50 border-t border-slate-200">
+                            {/* Action */}
+                            <div className="p-6 bg-gray-50 border-t border-gray-200">
+                                {/* Debug Info */}
+                                <div className="mb-3 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs">
+                                    <strong>Debug:</strong> onConfirm is {typeof onConfirm === 'function' ? '✅ function' : '❌ ' + typeof onConfirm}
+                                </div>
+                                
                                 <button
                                     onClick={handleConfirm}
                                     disabled={loading}
-                                    className={`w-full bg-blue-700 hover:bg-blue-800 text-white text-lg font-bold py-4 rounded-lg shadow-lg flex items-center justify-center gap-3 transition-all ${loading ? 'opacity-70 cursor-wait' : ''}`}
+                                    className={`w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 rounded-lg flex items-center justify-center gap-3 transition-all ${
+                                        loading ? 'opacity-70 cursor-wait' : ''
+                                    }`}
                                 >
                                     {loading ? (
                                         <>
@@ -118,58 +121,50 @@ export default function HospitalResult({ result, onConfirm, onCancel }) {
                                         </>
                                     ) : (
                                         <>
-                                            INITIATE TRANSPORT PROTOCOL
+                                            CONFIRM TRANSPORT
                                             <ArrowRight size={20} />
                                         </>
                                     )}
                                 </button>
                             </div>
-                        </motion.div>
+                        </div>
                     </div>
 
-                    {/* RIGHT: Alternatives */}
-                    <div className="space-y-5">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-sm font-bold text-slate-500 uppercase tracking-wide">Alternative Facilities</h3>
-                            <span className="text-xs bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full">Automated</span>
-                        </div>
+                    {/* Alternatives */}
+                    <div className="space-y-4">
+                        <h3 className="text-sm font-semibold text-gray-500 uppercase">Alternative Options</h3>
 
-                        {alternatives.map((alt, i) => (
+                        {alternatives && alternatives.length > 0 ? alternatives.map((alt, i) => (
                             <div
                                 key={alt.hospital.id || i}
-                                className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:border-slate-300 transition-all opacity-80 hover:opacity-100"
+                                className="bg-white p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-all"
                             >
                                 <div className="flex justify-between items-start mb-2">
-                                    <h4 className="font-bold text-slate-800 leading-tight">{alt.hospital.name}</h4>
-                                    <span className="text-sm font-bold text-slate-400">{Math.round(alt.score * 100)}%</span>
+                                    <h4 className="font-bold text-gray-800">{alt.hospital.name}</h4>
+                                    <span className="text-sm font-bold text-gray-400">{Math.round(alt.score * 100)}%</span>
                                 </div>
-                                <div className="text-xs text-slate-500 font-medium mb-3">
-                                    {alt.hospital.type === 'government' ? 'Government • Tertiary Care' : 'Private • Multi-specialty'}
-                                </div>
-                                <div className="flex items-center gap-4 text-sm text-slate-600 border-t border-slate-100 pt-3">
-                                    <div className="flex items-center gap-1">
+                                <div className="flex items-center gap-4 text-sm text-gray-600">
+                                    <span className="flex items-center gap-1">
                                         <Clock size={14} /> {alt.estimated_time_min} min
-                                    </div>
-                                    <div className="flex items-center gap-1">
+                                    </span>
+                                    <span className="flex items-center gap-1">
                                         <Navigation size={14} /> {alt.distance_km} km
-                                    </div>
+                                    </span>
                                 </div>
-                                {alt.selection_reason.includes('unavail') && (
-                                    <div className="mt-2 text-xs text-red-600 font-medium flex items-center gap-1">
-                                        <AlertTriangle size={12} /> Specialist Unavailable
-                                    </div>
-                                )}
                             </div>
-                        ))}
+                        )) : (
+                            <div className="bg-white p-4 rounded-lg border border-gray-200 text-center text-gray-500 text-sm">
+                                No alternatives available
+                            </div>
+                        )}
 
                         <button
                             onClick={onCancel}
-                            className="w-full py-3 text-slate-500 hover:text-red-600 font-medium text-sm flex items-center justify-center gap-2 transition-colors"
+                            className="w-full py-3 text-gray-500 hover:text-red-600 font-medium text-sm flex items-center justify-center gap-2 transition-colors"
                         >
-                            <X size={16} /> Discard & Return to Triage
+                            <X size={16} /> Cancel & Return
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>

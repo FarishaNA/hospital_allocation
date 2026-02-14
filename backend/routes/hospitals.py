@@ -13,14 +13,34 @@ def load_hospitals():
 
 @hospitals_bp.route('/', methods=['GET'])
 def get_hospitals():
+    """Get all hospitals"""
     return jsonify({"hospitals": load_hospitals()})
 
 @hospitals_bp.route('/match', methods=['POST'])
 def match_hospital():
+    """
+    Match optimal hospital for a patient.
+    
+    Expects:
+    {
+        "condition": "cardiac_arrest",
+        "severity": "critical",
+        "location": {"lat": 9.6667, "lon": 76.5667}
+    }
+    
+    Returns:
+    {
+        "selected": {...},
+        "alternatives": [...]
+    }
+    """
     data = request.json
     condition = data.get('condition')
     severity = data.get('severity')
-    location = data.get('location') # {lat, lon}
+    location = data.get('location')  # {lat, lon}
+    
+    if not condition or not severity or not location:
+        return jsonify({"error": "Missing required fields: condition, severity, location"}), 400
     
     hospitals = load_hospitals()
     
